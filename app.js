@@ -456,7 +456,9 @@ function setTheme(theme) {
   state.theme = theme;
   document.body.classList.toggle('dark', theme === 'dark');
   const icon = theme === 'dark' ? 'ti-sun' : 'ti-moon';
-  elements.themeToggle.innerHTML = `<i class="ti ${icon}"></i>`;
+  const label = theme === 'dark' ? 'Mode clair' : 'Mode sombre';
+  elements.themeToggle.innerHTML = `<i class="ti ${icon}"></i><span>${label}</span>`;
+  elements.themeToggle.setAttribute('aria-label', `Changer de thème : ${label}`);
   saveState();
 }
 
