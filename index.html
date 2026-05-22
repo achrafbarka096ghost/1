@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BacStudy — Sciences 2BAC Maroc</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <button class="hamburger" aria-label="Ouvrir le menu">
+    <i class="ti ti-menu-2"></i>
+  </button>
+
+  <div class="app">
+    <nav class="sidebar" id="sidebar" aria-label="Navigation principale">
+      <div class="sidebar-logo">
+        <div>
+          <h1>BacStudy</h1>
+          <span>2BAC Sciences · Maroc</span>
+        </div>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Changer de thème">
+          <i class="ti ti-moon"></i>
+        </button>
+      </div>
+
+      <div class="nav-section">Navigation</div>
+      <div class="nav-group" id="main-nav"></div>
+
+      <div class="nav-section">Matières</div>
+      <div class="nav-group" id="subject-nav"></div>
+
+      <div class="sidebar-footer">
+        <button class="reset-btn" id="reset-planning">Réinitialiser planning</button>
+      </div>
+    </nav>
+
+    <main class="main">
+      <section id="page-dashboard" class="page active" role="region" aria-labelledby="dashboard-title">
+        <div class="page-header">
+          <div>
+            <h2 id="dashboard-title">Bonjour 👋 — Bonne révision !</h2>
+            <p>Ton tableau de bord personnalisé pour le Bac Sciences.</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn-outline" id="continue-quiz">Continuer le quiz</button>
+          </div>
+        </div>
+
+        <div class="grid-4 stats-grid">
+          <div class="stat-card">
+            <span class="stat-label">Score QCM</span>
+            <strong id="d-score">0%</strong>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">QCM répondus</span>
+            <strong id="d-qcm">0</strong>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Chapitres disponibles</span>
+            <strong id="d-chapters">0</strong>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Questions disponibles</span>
+            <strong id="d-questions">0</strong>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <article class="card">
+            <div class="card-title"><i class="ti ti-chart-bar"></i> Progression par matière</div>
+            <div id="progress-scores"></div>
+          </article>
+          <article class="card">
+            <div class="card-title"><i class="ti ti-flame"></i> Chapitres prioritaires</div>
+            <div id="priority-list"></div>
+          </article>
+        </div>
+
+        <article class="card quick-access">
+          <div class="card-title"><i class="ti ti-lightning"></i> Accès rapide</div>
+          <div class="grid-4" id="quick-access"></div>
+        </article>
+      </section>
+
+      <section id="page-cours" class="page" role="region" aria-labelledby="cours-title">
+        <div class="page-header space-between">
+          <div>
+            <h2 id="cours-title">Cours complets</h2>
+            <p>Sélectionne une matière, cherche un chapitre, puis révise.</p>
+          </div>
+          <div class="inline-controls">
+            <input id="cours-search" type="search" placeholder="Rechercher un chapitre..." aria-label="Rechercher un chapitre" />
+          </div>
+        </div>
+
+        <div class="grid-4 mat-grid" id="mat-grid"></div>
+        <div id="cours-list-view" class="content-block">
+          <ul class="chap-list" id="chap-list"></ul>
+        </div>
+
+        <div id="cours-detail-view" class="cours-detail" hidden>
+          <button class="back-btn" type="button" id="back-to-cours"><i class="ti ti-arrow-left"></i> Retour</button>
+          <div id="cours-detail-content"></div>
+        </div>
+      </section>
+
+      <section id="page-fiches" class="page" role="region" aria-labelledby="fiches-title">
+        <div class="page-header space-between">
+          <div>
+            <h2 id="fiches-title">Fiches de révision</h2>
+            <p>Résumés condensés, filtres et recherche.</p>
+          </div>
+          <div class="inline-controls fiche-controls">
+            <select id="fiche-mat" aria-label="Choisir une matière pour les fiches">
+              <option value="svt">SVT</option>
+              <option value="pc">PC</option>
+              <option value="maths">Maths</option>
+              <option value="philo">Philo</option>
+            </select>
+            <div class="search-bar">
+              <i class="ti ti-search"></i>
+              <input id="fiche-search" type="search" placeholder="Rechercher une fiche..." aria-label="Rechercher une fiche" />
+            </div>
+          </div>
+        </div>
+        <div id="fiches-container" class="fiches-grid"></div>
+      </section>
+
+      <section id="page-quiz" class="page" role="region" aria-labelledby="quiz-title">
+        <div class="page-header space-between">
+          <div>
+            <h2 id="quiz-title">QCM & Exercices</h2>
+            <p>Teste tes connaissances et révise les erreurs.</p>
+          </div>
+          <div class="inline-controls quiz-controls">
+            <button class="btn-outline" id="reset-quiz">Réinitialiser le quiz</button>
+          </div>
+        </div>
+
+        <div class="grid-3 quiz-stats">
+          <div class="stat-card">
+            <span class="stat-label">Score</span>
+            <strong id="qs-score">0</strong>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Répondues</span>
+            <strong id="qs-total">0</strong>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Réussite</span>
+            <strong id="qs-pct">—</strong>
+          </div>
+        </div>
+
+        <div class="quiz-filter" id="quiz-filter"></div>
+        <div class="card quiz-card" id="quiz-box"></div>
+        <div class="quiz-review" id="quiz-review" hidden>
+          <strong>Revoir les erreurs</strong>
+          <ul id="review-list"></ul>
+        </div>
+      </section>
+
+      <section id="page-planning" class="page" role="region" aria-labelledby="planning-title">
+        <div class="page-header">
+          <div>
+            <h2 id="planning-title">Planning de révision</h2>
+            <p>Planifie ta semaine et garde tes choix en mémoire.</p>
+          </div>
+        </div>
+
+        <article class="card">
+          <div class="card-title"><i class="ti ti-calendar-week"></i> Semaine en cours</div>
+          <div class="week-grid" id="week-grid"></div>
+        </article>
+
+        <article class="card">
+          <div class="card-title"><i class="ti ti-clock"></i> Planning 4 semaines recommandé</div>
+          <div class="planning-tips">
+            <div><span class="badge badge-purple">Semaine 1</span> SVT : Neurophysiologie + Génétique · PC : Mécanique</div>
+            <div><span class="badge badge-teal">Semaine 2</span> PC : Électricité + Thermodynamique · Maths : Analyse</div>
+            <div><span class="badge badge-amber">Semaine 3</span> SVT : Immunologie + Digestion · Maths : Probabilités</div>
+            <div><span class="badge badge-red">Semaine 4</span> Révision générale · Annales · QCM intensif</div>
+          </div>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
