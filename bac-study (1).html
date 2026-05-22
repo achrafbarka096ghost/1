@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BacStudy 🇲🇦 — Sciences 2BAC Maroc</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+:root{
+  --bg:#f4f3ff;--card:#fff;--border:#e5e2f8;--text:#18162e;--muted:#6b6888;--soft:#f0effe;
+  --p:#6c63d8;--p-dark:#4a42b0;--p-light:#ede9ff;
+  --teal:#1a9e7a;--teal-bg:#e2f7f0;
+  --amber:#c47a0a;--amber-bg:#fff3d6;
+  --red:#d44;--red-bg:#fff0f0;
+  --green:#2a9d5c;--green-bg:#e8f8ef;
+  --radius:16px;--radius-sm:10px;--radius-xs:6px;
+  --shadow:0 2px 16px rgba(108,99,216,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+/* LAYOUT */
+.app{display:flex;min-height:100vh}
+.sidebar{width:220px;background:var(--card);border-right:1px solid var(--border);padding:1.5rem 1rem;display:flex;flex-direction:column;gap:4px;position:fixed;top:0;left:0;height:100vh;overflow-y:auto;z-index:10}
+.sidebar-logo{display:flex;align-items:center;gap:10px;padding:0 .5rem 1.25rem;border-bottom:1px solid var(--border);margin-bottom:.75rem}
+.sidebar-logo h1{font-size:18px;font-weight:700;color:var(--p-dark)}
+.sidebar-logo span{font-size:11px;color:var(--muted);display:block;margin-top:1px}
+.nav-btn{display:flex;align-items:center;gap:10px;padding:9px 12px;border:none;border-radius:var(--radius-sm);background:transparent;color:var(--muted);font-size:13px;font-family:'Outfit',sans-serif;cursor:pointer;width:100%;text-align:left;transition:all .15s;font-weight:400}
+.nav-btn i{font-size:18px}
+.nav-btn:hover{background:var(--p-light);color:var(--p-dark)}
+.nav-btn.active{background:var(--p);color:#fff;font-weight:500}
+.nav-section{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;padding:10px 12px 4px;letter-spacing:.08em}
+.main{margin-left:220px;flex:1;padding:2rem;max-width:860px}
+.page{display:none}.page.active{display:block}
+/* HEADER */
+.page-header{margin-bottom:1.5rem}
+.page-header h2{font-size:22px;font-weight:600}
+.page-header p{font-size:13px;color:var(--muted);margin-top:3px}
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;box-shadow:var(--shadow);margin-bottom:14px}
+.card-title{font-size:15px;font-weight:600;margin-bottom:.75rem;display:flex;align-items:center;gap:8px}
+/* GRID */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.grid-4{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+/* STAT CARD */
+.stat{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1rem;text-align:center;box-shadow:var(--shadow)}
+.stat-val{font-size:26px;font-weight:700;color:var(--p-dark)}
+.stat-lbl{font-size:11px;color:var(--muted);margin-top:2px}
+/* BADGES */
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:3px 9px;border-radius:20px;font-weight:500}
+.badge-purple{background:var(--p-light);color:var(--p-dark)}
+.badge-teal{background:var(--teal-bg);color:var(--teal)}
+.badge-amber{background:var(--amber-bg);color:var(--amber)}
+.badge-red{background:var(--red-bg);color:var(--red)}
+.badge-green{background:var(--green-bg);color:var(--green)}
+/* MATIERE CARDS */
+.mat-card{background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius);padding:1rem;cursor:pointer;text-align:center;transition:all .18s;box-shadow:var(--shadow)}
+.mat-card:hover{border-color:var(--p);transform:translateY(-2px)}
+.mat-card.active{border-color:var(--p);background:var(--p-light)}
+.mat-card i{font-size:28px;color:var(--p);display:block;margin-bottom:6px}
+.mat-card .mat-name{font-size:13px;font-weight:600;color:var(--text)}
+.mat-card .mat-count{font-size:11px;color:var(--muted);margin-top:2px}
+/* CHAPITRE LIST */
+.chap-list{list-style:none}
+.chap-item{display:flex;align-items:stretch;gap:0;border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:8px;overflow:hidden;cursor:pointer;transition:all .15s;background:var(--card)}
+.chap-item:hover{border-color:var(--p);box-shadow:0 2px 10px rgba(108,99,216,.12)}
+.chap-num{background:var(--p-light);color:var(--p-dark);font-size:13px;font-weight:700;min-width:38px;display:flex;align-items:center;justify-content:center}
+.chap-body{flex:1;padding:10px 12px}
+.chap-title{font-size:14px;font-weight:500}
+.chap-sub{font-size:11px;color:var(--muted);margin-top:2px}
+.prog-bar{height:4px;background:var(--soft);border-radius:2px;margin-top:6px;overflow:hidden}
+.prog-fill{height:100%;background:var(--p);border-radius:2px;transition:width .5s ease}
+.chap-arrow{display:flex;align-items:center;padding:0 12px;color:var(--muted);font-size:16px}
+/* COURS DETAIL */
+.cours-detail{display:none}
+.cours-detail.active{display:block}
+.back-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--card);color:var(--muted);font-size:13px;font-family:'Outfit',sans-serif;cursor:pointer;margin-bottom:1rem;transition:all .15s}
+.back-btn:hover{background:var(--p-light);color:var(--p-dark);border-color:var(--p)}
+.section-block{background:var(--soft);border-left:3px solid var(--p);border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:1rem 1.25rem;margin-bottom:12px}
+.section-block h4{font-size:14px;font-weight:600;color:var(--p-dark);margin-bottom:6px}
+.section-block p,.section-block li{font-size:13px;color:var(--text);line-height:1.8}
+.section-block ul{padding-left:1.2rem;margin-top:4px}
+.formula-box{background:var(--p-dark);color:#fff;border-radius:var(--radius-sm);padding:.875rem 1.25rem;margin:8px 0;font-size:14px;font-family:monospace;line-height:1.8}
+.formula-box span{color:#c8c4ff;font-size:12px;display:block;margin-top:4px}
+.tip-box{background:var(--teal-bg);border:1px solid #9fe1cb;border-radius:var(--radius-sm);padding:.875rem;margin:8px 0;font-size:13px;color:var(--teal)}
+.tip-box strong{display:block;margin-bottom:3px}
+.warning-box{background:var(--amber-bg);border:1px solid #fac775;border-radius:var(--radius-sm);padding:.875rem;margin:8px 0;font-size:13px;color:var(--amber)}
+.warning-box strong{display:block;margin-bottom:3px}
+/* QUIZ */
+.quiz-q-text{font-size:15px;font-weight:500;margin-bottom:14px;line-height:1.6}
+.quiz-opt{display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:11px 14px;margin-bottom:8px;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--card);color:var(--text);font-size:13px;font-family:'Outfit',sans-serif;cursor:pointer;transition:all .15s}
+.quiz-opt:hover:not(.locked){background:var(--p-light);border-color:var(--p)}
+.quiz-opt.correct{background:var(--green-bg);border-color:var(--green);color:var(--green)}
+.quiz-opt.wrong{background:var(--red-bg);border-color:var(--red);color:var(--red)}
+.opt-letter{width:24px;height:24px;border-radius:50%;background:var(--soft);color:var(--p-dark);font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.quiz-filter{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem}
+.filter-btn{padding:6px 14px;border:1px solid var(--border);border-radius:20px;background:var(--card);color:var(--muted);font-size:12px;cursor:pointer;transition:all .15s}
+.filter-btn.active{background:var(--p);color:#fff;border-color:var(--p)}
+/* PLANNING */
+.week-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.day-col{background:var(--soft);border-radius:var(--radius-sm);padding:8px 4px;text-align:center}
+.day-name{font-size:10px;color:var(--muted);font-weight:700;margin-bottom:6px;text-transform:uppercase}
+.slot{border:1.5px dashed var(--border);border-radius:6px;padding:5px 2px;font-size:10px;color:var(--muted);margin-bottom:4px;cursor:pointer;transition:all .15s;min-height:30px;display:flex;align-items:center;justify-content:center}
+.slot:hover{border-color:var(--p)}
+/* FICHES */
+.fiche-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-bottom:10px;box-shadow:var(--shadow)}
+.fiche-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.fiche-body-text{font-size:13px;color:var(--muted);line-height:1.8}
+.fiche-formula{background:var(--p-dark);color:#fff;border-radius:var(--radius-xs);padding:6px 10px;font-family:monospace;font-size:13px;margin:6px 0;display:block}
+/* SEARCH */
+.search-bar{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 14px;margin-bottom:1rem}
+.search-bar i{color:var(--muted);font-size:18px}
+.search-bar input{border:none;outline:none;background:transparent;font-family:'Outfit',sans-serif;font-size:13px;color:var(--text);flex:1}
+/* SELECT */
+select{padding:9px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--card);color:var(--text);font-size:13px;font-family:'Outfit',sans-serif;outline:none;cursor:pointer}
+select:focus{border-color:var(--p)}
+/* PROGRESS */
+.progress-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.progress-row span{font-size:12px;color:var(--muted);min-width:90px}
+.progress-row .bar{flex:1;height:6px;background:var(--soft);border-radius:3px;overflow:hidden}
+.progress-row .fill{height:100%;background:var(--p);border-radius:3px}
+.progress-row .pct{font-size:12px;font-weight:600;color:var(--p-dark);min-width:32px;text-align:right}
+/* MOBILE */
+.hamburger{display:none;position:fixed;top:14px;left:14px;z-index:100;background:var(--p);color:#fff;border:none;border-radius:var(--radius-xs);width:36px;height:36px;font-size:18px;cursor:pointer;align-items:center;justify-content:center}
+@media(max-width:700px){
+  .sidebar{transform:translateX(-100%);transition:transform .25s}.sidebar.open{transform:translateX(0)}
+  .main{margin-left:0;padding:1rem;padding-top:3.5rem}
+  .grid-2,.grid-3{grid-template-columns:1fr}
+  .week-grid{grid-template-columns:repeat(4,1fr)}
+  .hamburger{display:flex}
+}
+</style>
+</head>
+<body>
+
+<button class="hamburger" onclick="toggleSidebar()" aria-label="Menu"><i class="ti ti-menu-2"></i></button>
+
+<div class="app">
+<!-- SIDEBAR -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div>
+      <h1>🇲🇦 BacStudy</h1>
+      <span>2BAC Sciences · Maroc</span>
+    </div>
+  </div>
+  <div class="nav-section">Navigation</div>
+  <button class="nav-btn active" onclick="goTo('dashboard',this)"><i class="ti ti-layout-dashboard"></i> Tableau de bord</button>
+  <button class="nav-btn" onclick="goTo('cours',this)"><i class="ti ti-book"></i> Cours complets</button>
+  <button class="nav-btn" onclick="goTo('fiches',this)"><i class="ti ti-file-text"></i> Fiches de révision</button>
+  <button class="nav-btn" onclick="goTo('quiz',this)"><i class="ti ti-bulb"></i> QCM & Exercices</button>
+  <button class="nav-btn" onclick="goTo('planning',this)"><i class="ti ti-calendar"></i> Planning</button>
+  <div class="nav-section" style="margin-top:auto">Matières</div>
+  <button class="nav-btn" onclick="goTo('cours',this);selectMat('svt')"><i class="ti ti-dna"></i> SVT</button>
+  <button class="nav-btn" onclick="goTo('cours',this);selectMat('pc')"><i class="ti ti-atom"></i> PC</button>
+  <button class="nav-btn" onclick="goTo('cours',this);selectMat('maths')"><i class="ti ti-math"></i> Maths</button>
+  <button class="nav-btn" onclick="goTo('cours',this);selectMat('philo')"><i class="ti ti-brain"></i> Philosophie</button>
+</nav>
+
+<main class="main">
+
+<!-- DASHBOARD -->
+<div id="page-dashboard" class="page active">
+  <div class="page-header">
+    <h2>Bonjour 👋 — Bonne révision !</h2>
+    <p>Voici ton résumé de progression pour le Bac Sciences</p>
+  </div>
+  <div class="grid-4" style="margin-bottom:1.25rem">
+    <div class="stat"><div class="stat-val" id="d-score">0%</div><div class="stat-lbl">Score QCM</div></div>
+    <div class="stat"><div class="stat-val" id="d-qcm">0</div><div class="stat-lbl">QCM répondus</div></div>
+    <div class="stat"><div class="stat-val">20</div><div class="stat-lbl">Chapitres</div></div>
+    <div class="stat"><div class="stat-val">80+</div><div class="stat-lbl">Questions QCM</div></div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title"><i class="ti ti-chart-bar" style="color:var(--p)"></i> Progression par matière</div>
+      <div class="progress-row"><span>SVT</span><div class="bar"><div class="fill" style="width:72%"></div></div><div class="pct">72%</div></div>
+      <div class="progress-row"><span>PC</span><div class="bar"><div class="fill" style="width:58%"></div></div><div class="pct">58%</div></div>
+      <div class="progress-row"><span>Maths</span><div class="bar"><div class="fill" style="width:65%"></div></div><div class="pct">65%</div></div>
+      <div class="progress-row"><span>Philosophie</span><div class="bar"><div class="fill" style="width:40%"></div></div><div class="pct">40%</div></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><i class="ti ti-flame" style="color:#e07b39"></i> Chapitres prioritaires</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px"><span>Cinétique chimique</span><span class="badge badge-red">Urgent</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px"><span>Probabilités</span><span class="badge badge-red">Urgent</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px"><span>Thermodynamique</span><span class="badge badge-amber">Important</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px"><span>La reproduction</span><span class="badge badge-amber">Important</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px"><span>Géométrie espace</span><span class="badge badge-purple">Normal</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title"><i class="ti ti-calendar-week" style="color:var(--p)"></i> Accès rapide</div>
+    <div class="grid-4">
+      <button class="mat-card" onclick="goTo('cours',null);selectMat('svt')"><i class="ti ti-dna"></i><div class="mat-name">SVT</div><div class="mat-count">5 chapitres</div></button>
+      <button class="mat-card" onclick="goTo('cours',null);selectMat('pc')"><i class="ti ti-atom"></i><div class="mat-name">PC</div><div class="mat-count">5 chapitres</div></button>
+      <button class="mat-card" onclick="goTo('cours',null);selectMat('maths')"><i class="ti ti-math"></i><div class="mat-name">Maths</div><div class="mat-count">5 chapitres</div></button>
+      <button class="mat-card" onclick="goTo('quiz',null)"><i class="ti ti-bulb"></i><div class="mat-name">QCM</div><div class="mat-count">80+ questions</div></button>
+    </div>
+  </div>
+</div>
+
+<!-- COURS -->
+<div id="page-cours" class="page">
+  <div id="cours-list-view">
+    <div class="page-header"><h2>Cours complets</h2><p>Sélectionne une matière puis un chapitre</p></div>
+    <div class="grid-4" id="mat-grid" style="margin-bottom:1.25rem">
+      <div class="mat-card active" id="mat-svt" onclick="selectMat('svt')"><i class="ti ti-dna"></i><div class="mat-name">SVT</div><div class="mat-count">5 chapitres</div></div>
+      <div class="mat-card" id="mat-pc" onclick="selectMat('pc')"><i class="ti ti-atom"></i><div class="mat-name">PC</div><div class="mat-count">5 chapitres</div></div>
+      <div class="mat-card" id="mat-maths" onclick="selectMat('maths')"><i class="ti ti-math"></i><div class="mat-name">Maths</div><div class="mat-count">5 chapitres</div></div>
+      <div class="mat-card" id="mat-philo" onclick="selectMat('philo')"><i class="ti ti-brain"></i><div class="mat-name">Philo</div><div class="mat-count">3 chapitres</div></div>
+    </div>
+    <ul class="chap-list" id="chap-list"></ul>
+  </div>
+  <div id="cours-detail-view" class="cours-detail">
+    <button class="back-btn" onclick="backToList()"><i class="ti ti-arrow-left"></i> Retour</button>
+    <div id="cours-detail-content"></div>
+  </div>
+</div>
+
+<!-- FICHES -->
+<div id="page-fiches" class="page">
+  <div class="page-header"><h2>Fiches de révision</h2><p>Résumés condensés avec formules essentielles</p></div>
+  <div style="display:flex;gap:10px;align-items:center;margin-bottom:1rem;flex-wrap:wrap">
+    <select id="fiche-mat" onchange="renderFiches()">
+      <option value="svt">SVT</option><option value="pc">PC</option><option value="maths">Maths</option>
+    </select>
+    <div class="search-bar" style="flex:1;min-width:180px">
+      <i class="ti ti-search"></i>
+      <input type="text" id="fiche-search" placeholder="Rechercher une fiche..." oninput="renderFiches()">
+    </div>
+  </div>
+  <div id="fiches-container"></div>
+</div>
+
+<!-- QUIZ -->
+<div id="page-quiz" class="page">
+  <div class="page-header"><h2>QCM & Exercices</h2><p>Teste tes connaissances — 80+ questions</p></div>
+  <div class="grid-3" style="margin-bottom:1rem">
+    <div class="stat"><div class="stat-val" id="qs-score">0</div><div class="stat-lbl">Score</div></div>
+    <div class="stat"><div class="stat-val" id="qs-total">0</div><div class="stat-lbl">Répondues</div></div>
+    <div class="stat"><div class="stat-val" id="qs-pct">—</div><div class="stat-lbl">Réussite</div></div>
+  </div>
+  <div class="quiz-filter" id="quiz-filter">
+    <button class="filter-btn active" onclick="setFilter('all',this)">Toutes</button>
+    <button class="filter-btn" onclick="setFilter('svt',this)">SVT</button>
+    <button class="filter-btn" onclick="setFilter('pc',this)">PC</button>
+    <button class="filter-btn" onclick="setFilter('maths',this)">Maths</button>
+    <button class="filter-btn" onclick="setFilter('philo',this)">Philo</button>
+  </div>
+  <div class="card" id="quiz-box"></div>
+</div>
+
+<!-- PLANNING -->
+<div id="page-planning" class="page">
+  <div class="page-header"><h2>Planning de révision</h2><p>Clique sur une case pour assigner une matière</p></div>
+  <div class="card">
+    <div class="card-title"><i class="ti ti-calendar-week" style="color:var(--p)"></i> Semaine en cours</div>
+    <div class="week-grid" id="week-grid"></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)">
+      <span class="badge badge-purple">SVT</span>
+      <span class="badge badge-teal">PC</span>
+      <span class="badge badge-amber">Maths</span>
+      <span style="background:#fbeaf0;color:#993556" class="badge">Philo</span>
+      <span class="badge" style="background:var(--soft);color:var(--muted)">Libre</span>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title"><i class="ti ti-clock" style="color:var(--p)"></i> Planning 4 semaines recommandé</div>
+    <div style="display:flex;flex-direction:column;gap:8px;font-size:13px">
+      <div style="display:flex;gap:10px;align-items:center"><span class="badge badge-purple" style="min-width:80px;justify-content:center">Semaine 1</span><span>SVT : Neurophysiologie + Génétique · PC : Mécanique</span></div>
+      <div style="display:flex;gap:10px;align-items:center"><span class="badge badge-teal" style="min-width:80px;justify-content:center">Semaine 2</span><span>PC : Électricité + Thermodynamique · Maths : Analyse</span></div>
+      <div style="display:flex;gap:10px;align-items:center"><span class="badge badge-amber" style="min-width:80px;justify-content:center">Semaine 3</span><span>SVT : Immunologie + Digestion · Maths : Probabilités + Suites</span></div>
+      <div style="display:flex;gap:10px;align-items:center"><span class="badge" style="background:#fbeaf0;color:#993556;min-width:80px;justify-content:center">Semaine 4</span><span>Révision générale · Annales · QCM intensif</span></div>
+    </div>
+  </div>
+</div>
+
+</main>
+</div>
+
+<script>
+// ===================== DATA =====================
+const COURS_DATA = {
+  svt: [
+    { id:'svt1', num:1, title:'La neurophysiologie', sub:'Influx nerveux · Synapse · Arc réflexe', prog:85, badge:'badge-purple',
+      sections:[
+        {type:'intro', title:'Introduction', text:'La neurophysiologie étudie le fonctionnement du système nerveux. Un neurone est une cellule excitable capable de transmettre un signal électrique appelé potentiel d\'action.'},
+        {type:'section', title:'1. Le potentiel d\'action', text:'Au repos, l\'intérieur du neurone est négatif (−70 mV). Une stimulation suffisante ouvre les canaux Na⁺ : la membrane se dépolarise jusqu\'à +30 mV, puis les canaux K⁺ s\'ouvrent pour repolariser la cellule.', items:['Potentiel de repos : −70 mV','Seuil de déclenchement : −55 mV','Dépolarisation : entrée massive de Na⁺','Repolarisation : sortie de K⁺','Hyperpolarisation transitoire avant retour au repos']},
+        {type:'formula', lines:['Loi du tout ou rien :', 'Si stimulus ≥ seuil → potentiel d\'action COMPLET', 'Si stimulus < seuil → pas de réponse']},
+        {type:'section', title:'2. La transmission synaptique', text:'La synapse est la zone de communication entre deux neurones. La transmission est chimique (via neurotransmetteurs) et unidirectionnelle.', items:['Neurone pré-synaptique libère des vésicules','Neurotransmetteurs traversent la fente synaptique (20 nm)','Fixation sur récepteurs du neurone post-synaptique','Effet excitateur (PPSE) ou inhibiteur (PPSI)','Dégradation enzymatique du neurotransmetteur']},
+        {type:'tip', text:'Astuce Bac : La sérotonine et la dopamine sont des neurotransmetteurs. L\'acétylcholine est libérée à la jonction neuromusculaire.'},
+        {type:'section', title:'3. L\'arc réflexe', text:'Un réflexe est une réponse motrice involontaire et rapide. Le circuit emprunte : récepteur → neurone afférent → centre nerveux (moelle) → neurone efférent → effecteur.'},
+        {type:'warning', text:'À ne pas confondre : réflexe myotatique (monosynaptique) et réflexe de flexion (polysynaptique avec interneurones).'},
+      ]
+    },
+    { id:'svt2', num:2, title:'La génétique', sub:'Mitose · Méiose · Hérédité mendélienne', prog:70, badge:'badge-teal',
+      sections:[
+        {type:'intro', title:'Introduction', text:'La génétique étudie la transmission des caractères héréditaires. Chaque cellule humaine contient 46 chromosomes (23 paires). Les gamètes n\'en contiennent que 23 (haploïdes).'},
+        {type:'section', title:'1. La mitose', text:'Division cellulaire qui produit 2 cellules filles génétiquement identiques à la cellule mère (2n → 2n). Elle comprend 4 phases.', items:['Prophase : condensation des chromosomes','Métaphase : alignement à l\'équateur (plaque métaphasique)','Anaphase : séparation des chromatides sœurs vers les pôles','Télophase : formation de 2 noyaux fils']},
+        {type:'section', title:'2. La méiose', text:'Division qui produit 4 cellules haploïdes (n) génétiquement différentes. Elle assure la diversité génétique.', items:['Méiose I : séparation des chromosomes homologues (réductionnelle)','Méiose II : séparation des chromatides sœurs (équationnelle)','Enjambement (crossing-over) en prophase I → diversité','Résultat : 4 cellules haploïdes différentes']},
+        {type:'formula', lines:['Mitose : 2n → 2 × 2n  (identiques)', 'Méiose : 2n → 4 × n  (différentes)', 'Chez l\'humain : 2n = 46, n = 23']},
+        {type:'section', title:'3. Les lois de Mendel', text:'Mendel a établi les règles de transmission des caractères héréditaires à partir d\'expériences sur des pois.', items:['1ère loi (uniformité) : les hybrides F1 sont uniformes','2ème loi (ségrégation) : ratio 3/1 en F2 pour monohybridisme','3ème loi (indépendance) : ratio 9/3/3/1 pour dihybridisme']},
+        {type:'formula', lines:['Monohybridisme F2 : 1 AA : 2 Aa : 1 aa (génotypes)', '→ phénotypes : 3 [A] : 1 [a]', 'Dihybridisme F2 (gènes indépendants) : 9:3:3:1']},
+        {type:'tip', text:'Méthode échiquier de Punnett : toujours dresser le tableau des croisements pour éviter les erreurs au Bac.'},
+      ]
+    },
+    { id:'svt3', num:3, title:'L\'immunologie', sub:'Réponse immunitaire · Anticorps · Vaccination', prog:55, badge:'badge-purple',
+      sections:[
+        {type:'intro', title:'Introduction', text:'Le système immunitaire protège l\'organisme contre les agents pathogènes (bactéries, virus, parasites). Il distingue le soi du non-soi grâce aux antigènes.'},
+        {type:'section', title:'1. Immunité innée (non spécifique)', text:'Première ligne de défense, rapide et non spécifique.', items:['Barrières physiques : peau, muqueuses','Réaction inflammatoire : vasodilatation, afflux de leucocytes','Phagocytose par les macrophages et neutrophiles','Protéines du complément']},
+        {type:'section', title:'2. Immunité adaptative (spécifique)', text:'Réponse lente mais très spécifique, avec mémoire immunologique.', items:['Réponse humorale : lymphocytes B → plasmocytes → anticorps','Réponse cellulaire : lymphocytes T cytotoxiques (LTc)','Lymphocytes T auxiliaires (LTa/CD4+) coordonnent la réponse','Cellules mémoires → réponse plus rapide lors d\'une 2ème infection']},
+        {type:'formula', lines:['Anticorps = immunoglobulines (Ig)', 'Structure en Y : 2 chaînes lourdes + 2 chaînes légères', 'Site de fixation à l\'antigène = paratope', 'Epitope = partie de l\'antigène reconnue']},
+        {type:'tip', text:'La vaccination crée une mémoire immunologique SANS provoquer la maladie. Elle utilise des antigènes atténués, inactivés ou des fragments d\'agents pathogènes.'},
+      ]
+    },
+    { id:'svt4', num:4, title:'La digestion', sub:'Enzymes digestives · Absorption intestinale', prog:40, badge:'badge-teal',
+      sections:[
+        {type:'intro', title:'Introduction', text:'La digestion transforme les macromolécules alimentaires en molécules simples absorbables par les cellules intestinales.'},
+        {type:'section', title:'1. Les enzymes digestives', text:'Chaque enzyme est spécifique à un substrat et agit dans des conditions optimales de pH et température.', items:['Amylase salivaire (pH 7) : amidon → maltose','Pepsine gastrique (pH 2) : protéines → peptides','Lipase pancréatique : lipides → acides gras + glycérol','Trypsine pancréatique : protéines → acides aminés','Maltase intestinale : maltose → glucose']},
+        {type:'formula', lines:['Glucides : amidon → glucose (via amylase, maltase)', 'Protéines → acides aminés (via pepsine, trypsine)', 'Lipides → AG + glycérol (via lipase)', 'Rôle de la bile : émulsification des lipides']},
+        {type:'section', title:'2. L\'absorption intestinale', text:'Les nutriments traversent la paroi intestinale via les villosités intestinales. Le glucose et les acides aminés passent dans le sang (veine porte). Les acides gras passent dans la lymphe (chylifères).'},
+        {type:'tip', text:'Les villosités intestinales multiplient la surface d\'absorption par 600. Chaque villosité contient un capillaire sanguin et un vaisseau lymphatique (chylifère).'},
+      ]
+    },
+    { id:'svt5', num:5, title:'La reproduction', sub:'Gamètes · Fécondation · Développement embryonnaire', prog:30, badge:'badge-amber',
+      sections:[
+        {type:'intro', title:'Introduction', text:'La reproduction sexuée assure la diversité génétique des espèces. Elle nécessite la formation de gamètes haploïdes (méiose) et leur fusion lors de la fécondation.'},
+        {type:'section', title:'1. La gamétogenèse', text:'Formation des gamètes dans les gonades.', items:['Spermatogenèse (testicules) : spermatogonies → spermatocytes → spermatides → spermatozoïdes','Ovogenèse (ovaires) : ovogonies → ovocyte I (bloqué en prophase I) → ovocyte II → ovotide','La méiose de l\'ovocyte II n\'est complète qu\'après fécondation']},
+        {type:'section', title:'2. La fécondation', text:'Union du spermatozoïde et de l\'ovule. Lieu : trompe de Fallope.', items:['Acrosome : libère des enzymes pour traverser la zone pellucide','Fusion des membranes → réaction corticale (empêche polyspermie)','Formation du zygote (2n = 46 chromosomes)','Début des divisions de segmentation']},
+        {type:'section', title:'3. Développement embryonnaire', text:'', items:['Zygote → morula (16 cellules) → blastocyste → gastrula','Implantation (nidation) dans l\'endomètre : J6-J10','Feuillets embryonnaires : ectoderme, mésoderme, endoderme','HCG maintient le corps jaune pendant la grossesse']},
+      ]
+    },
+  ],
+  pc: [
+    { id:'pc1', num:1, title:'Mécanique', sub:'Lois de Newton · Énergie · Oscillateurs', prog:75, badge:'badge-teal',
+      sections:[
+        {type:'intro', title:'Introduction', text:'La mécanique classique décrit le mouvement des corps macroscopiques à des vitesses bien inférieures à la lumière. Elle repose sur les 3 lois de Newton.'},
+        {type:'section', title:'1. Les lois de Newton', text:'', items:['Loi d\'inertie (1ère) : tout corps persiste dans son état si ΣF = 0','Loi fondamentale (2ème) : ΣF = m·a⃗ (dans un référentiel galiléen)','Loi d\'action-réaction (3ème) : F₁₂ = −F₂₁']},
+        {type:'formula', lines:['ΣF⃗ = m · a⃗  (2ème loi)', 'Poids : P⃗ = m · g⃗   (g = 9,8 m/s² sur Terre)', 'Frottement : f = μ · N']},
+        {type:'section', title:'2. Énergie mécanique', text:'', items:['Énergie cinétique : Ec = ½mv²','Énergie potentielle de pesanteur : Ep = mgh','Énergie mécanique : Em = Ec + Ep','Conservation si forces conservatives uniquement']},
+        {type:'formula', lines:['Ec = ½ m v²  (joules)', 'Ep = m g h   (joules, h en mètres)', 'Em = Ec + Ep = constante (si pas de frottement)', 'Théorème énergie cinétique : ΔEc = W(F⃗)']},
+        {type:'section', title:'3. Les oscillateurs mécaniques', text:'', items:['Oscillateur horizontal : ẍ + (k/m)x = 0  →  ω₀ = √(k/m)','Oscillateur vertical : même équation après changement de variable','Pendule simple : ω₀ = √(g/L) (petites oscillations)','Période : T₀ = 2π/ω₀']},
+        {type:'formula', lines:['ω₀ = √(k/m)  (rad/s)', 'T₀ = 2π/ω₀ = 2π√(m/k)', 'x(t) = X_m · cos(ω₀t + φ)']},
+        {type:'tip', text:'Au Bac : toujours vérifier les unités ! Énergie en joules (J), force en newtons (N), travail en joules (J = N·m).'},
+      ]
+    },
+    { id:'pc2', num:2, title:'Électricité', sub:'RC · RL · RLC — Régimes transitoires & forcé', prog:60, badge:'badge-purple',
+      sections:[
+        {type:'intro', title:'Introduction', text:'L\'électricité étudie les circuits électriques et leur comportement. Au programme Bac : condensateur, bobine, circuits RC, RL et RLC.'},
+        {type:'section', title:'1. Condensateur', text:'', items:['Relation fondamentale : q = C·u_C → i = C·(du_C/dt)','Énergie stockée : E_C = ½·C·u²_C','Charge : courant entre dans la borne +','Décharge : courant sort de la borne +']},
+        {type:'formula', lines:['Circuit RC — Charge :', 'u_C(t) = E·(1 − e^(−t/τ))   τ = RC', 'Circuit RC — Décharge :', 'u_C(t) = U₀·e^(−t/τ)        i(t) = −(U₀/R)·e^(−t/τ)']},
+        {type:'section', title:'2. Bobine (inductance)', text:'', items:['Relation : u_L = L·(di/dt)','Énergie stockée : E_L = ½·L·i²','S\'oppose aux variations de courant','En régime permanent DC : u_L = 0 (court-circuit)']},
+        {type:'formula', lines:['Circuit RL — Établissement :', 'i(t) = (E/R)·(1 − e^(−t/τ))   τ = L/R', 'Circuit RL — Rupture :', 'i(t) = I₀·e^(−t/τ)']},
+        {type:'section', title:'3. Circuit RLC — Oscillations', text:'', items:['Équation diff : Lq̈ + Rq̇ + q/C = E','Sans résistance : oscillations libres non amorties','Avec R : oscillations amorties (R < 2√(L/C))','Pseudo-période : T ≈ T₀ pour faible amortissement']},
+        {type:'formula', lines:['ω₀ = 1/√(LC)   T₀ = 2π√(LC)', 'Résonance : ω = ω₀  →  amplitude max', 'Amortissement critique : R = 2√(L/C)']},
+        {type:'tip', text:'Méthode : En régime permanent DC, le condensateur = interrupteur ouvert, la bobine = fil conducteur.'},
+      ]
+    },
+    { id:'pc3', num:3, title:'Thermodynamique', sub:'1er et 2ème principes · Machines thermiques', prog:45, badge:'badge-amber',
+      sections:[
+        {type:'intro', title:'Introduction', text:'La thermodynamique étudie les échanges d\'énergie sous forme de chaleur et de travail entre un système et son environnement.'},
+        {type:'section', title:'1. Premiers principes', text:'', items:['1er principe (conservation) : ΔU = W + Q','ΔU : variation d\'énergie interne du système','W : travail reçu par le système (positif si reçu)','Q : chaleur reçue (positif si absorbée)']},
+        {type:'formula', lines:['1er principe : ΔU = W + Q', 'Transformation isotherme : ΔU = 0  →  Q = −W', 'Transformation adiabatique : Q = 0  →  ΔU = W', 'Gaz parfait : ΔU = n·Cv·ΔT']},
+        {type:'section', title:'2. Deuxième principe', text:'La chaleur ne peut passer spontanément du corps froid vers le corps chaud. L\'entropie d\'un système isolé ne peut que croître.', items:['Machines thermiques : moteur et réfrigérateur/pompe à chaleur','Moteur : absorbe Q1 (source chaude), fournit W, rejette Q2 (source froide)','Rendement : η = W/Q1 = 1 − Q2/Q1 ≤ 1 − T_f/T_c (Carnot)']},
+        {type:'formula', lines:['Rendement moteur : η = |W|/|Q₁| = 1 − |Q₂|/|Q₁|', 'Rendement Carnot : η_Carnot = 1 − T_froide/T_chaude', '1er principe : Q₁ = |W| + |Q₂|']},
+      ]
+    },
+    { id:'pc4', num:4, title:'Chimie organique', sub:'Alcools · Aldéhydes · Cétones · Acides · Esters', prog:50, badge:'badge-purple',
+      sections:[
+        {type:'intro', title:'Introduction', text:'La chimie organique étudie les composés du carbone. Les fonctions chimiques déterminent les propriétés et réactions des molécules.'},
+        {type:'section', title:'1. Les fonctions oxygénées', text:'', items:['Alcool : −OH (primaire, secondaire, tertiaire)','Aldéhyde : −CHO (en bout de chaîne)','Cétone : C=O (au milieu de la chaîne)','Acide carboxylique : −COOH','Ester : −COO− (entre acide et alcool)']},
+        {type:'section', title:'2. Oxydation des alcools', text:'', items:['Alcool primaire → aldéhyde → acide carboxylique','Alcool secondaire → cétone (ne s\'oxyde pas davantage)','Alcool tertiaire : pas d\'oxydation (avec oxydants doux)','Réactifs : K₂Cr₂O₇/H⁺ (rouge → vert), KMnO₄/H⁺']},
+        {type:'formula', lines:['Estérification : R−COOH + R\'−OH ⇌ R−COO−R\' + H₂O', '(lente, limitée, athermique, catalyseur H⁺)', 'Saponification : R−COO−R\' + NaOH → R−COONa + R\'−OH', '(totale, irréversible, exothermique)']},
+        {type:'tip', text:'Règle de nomenclature : identifier la chaîne principale → nommer la fonction → numéroter les carbones (la fonction prioritaire a le numéro le plus petit).'},
+      ]
+    },
+    { id:'pc5', num:5, title:'Cinétique chimique', sub:'Vitesse de réaction · Catalyse · Loi de vitesse', prog:35, badge:'badge-red',
+      sections:[
+        {type:'intro', title:'Introduction', text:'La cinétique chimique étudie la vitesse des réactions chimiques et les facteurs qui l\'influencent. Elle est fondamentale en industrie.'},
+        {type:'section', title:'1. Vitesse de réaction', text:'La vitesse est définie par la variation de concentration d\'un réactif ou produit par unité de temps.', items:['v = −(1/a)·d[A]/dt = +(1/b)·d[B]/dt','Loi de vitesse (ordre n) : v = k·[A]ⁿ','Ordre 0 : [A] = [A]₀ − k·t  (droite)','Ordre 1 : ln[A] = ln[A]₀ − k·t  (exponentielle)','Temps de demi-réaction t₁/₂ : [A] = [A]₀/2']},
+        {type:'formula', lines:['Ordre 1 : t₁/₂ = ln(2)/k  (indépendant de [A]₀)', 'Ordre 2 : t₁/₂ = 1/(k·[A]₀)', 'Loi d\'Arrhenius : k = A·e^(−Ea/RT)', 'Plus T ↑ → k ↑ → réaction plus rapide']},
+        {type:'section', title:'2. Facteurs cinétiques', text:'', items:['Température : k × 2 tous les 10°C environ','Concentration : augmenter [réactif] accélère la réaction','Catalyseur : abaisse Ea, augmente k, ne modifie pas l\'équilibre','État physique : surface de contact (solides broyés)']},
+        {type:'warning', text:'Un catalyseur n\'est pas consommé. Il accélère la réaction dans les deux sens mais ne change pas la position de l\'équilibre (ΔrG inchangé).'},
+      ]
+    },
+  ],
+  maths: [
+    { id:'m1', num:1, title:'Analyse — Limites et continuité', sub:'Limites · Asymptotes · Continuité', prog:80, badge:'badge-purple',
+      sections:[
+        {type:'intro', title:'Introduction', text:'L\'analyse est le cœur des mathématiques au Bac. Maîtriser les limites, la dérivation et l\'intégration est indispensable.'},
+        {type:'section', title:'1. Calcul de limites', text:'', items:['Limites usuelles : lim(sin x/x) = 1 en 0, lim(eˣ/x) = +∞ en +∞','Formes indéterminées : 0/0, ∞/∞, 0×∞, ∞−∞','Lever FI : factoriser, conjugué, règle de L\'Hôpital, développement','Limites en ±∞ : terme dominant']},
+        {type:'formula', lines:['lim(x→0) sin(x)/x = 1', 'lim(x→+∞) eˣ/xⁿ = +∞  (exponentielle >> polynôme)', 'lim(x→+∞) ln(x)/x = 0  (polynôme >> logarithme)', 'Croissances comparées : ln << polynôme << exp']},
+        {type:'section', title:'2. Dérivation', text:'', items:['(uv)\' = u\'v + uv\'','(u/v)\' = (u\'v − uv\')/v²','(f∘g)\' = g\'·(f\'∘g)']},
+        {type:'formula', lines:['(xⁿ)\' = n·xⁿ⁻¹  |  (eˣ)\' = eˣ  |  (ln x)\' = 1/x', '(sin x)\' = cos x  |  (cos x)\' = −sin x', '(tan x)\' = 1+tan²x = 1/cos²x', '(√x)\' = 1/(2√x)  |  (uⁿ)\' = n·u\'·uⁿ⁻¹']},
+        {type:'section', title:'3. Intégration', text:'', items:['∫xⁿdx = xⁿ⁺¹/(n+1) + C  (n ≠ −1)','∫(1/x)dx = ln|x| + C','∫eˣdx = eˣ + C  |  ∫sin(x)dx = −cos(x) + C','Intégration par parties : ∫u v\' = [uv] − ∫u\'v']},
+      ]
+    },
+    { id:'m2', num:2, title:'Suites numériques', sub:'Arithmétiques · Géométriques · Récurrentes', prog:65, badge:'badge-teal',
+      sections:[
+        {type:'intro', title:'Introduction', text:'Une suite est une fonction définie sur ℕ. Les suites arithmétiques et géométriques sont les plus importantes au Bac.'},
+        {type:'section', title:'1. Suites arithmétiques', text:'Chaque terme est obtenu en ajoutant une raison r constante au précédent.', items:['u_n = u₀ + n·r','Somme : S = n·(u₀ + u_{n-1})/2 = n·(premier + dernier)/2','Monotone si r > 0 (croissante) ou r < 0 (décroissante)']},
+        {type:'formula', lines:['Terme général : u_n = u₀ + n·r', 'Terme : u_n = u_p + (n−p)·r', 'Somme de n termes : Sₙ = n·(u₁ + uₙ)/2']},
+        {type:'section', title:'2. Suites géométriques', text:'Chaque terme est obtenu en multipliant par une raison q constante.', items:['u_n = u₀ · qⁿ','Somme (q ≠ 1) : S = u₀·(1 − qⁿ)/(1 − q)','Convergente si |q| < 1 → lim = 0']},
+        {type:'formula', lines:['Terme général : u_n = u₀ · qⁿ', 'Somme n premiers termes : Sₙ = u₁·(1 − qⁿ)/(1 − q)', 'Somme infinie (|q|<1) : S∞ = u₁/(1 − q)']},
+        {type:'tip', text:'Pour reconnaître une suite géométrique : calculer u_{n+1}/u_n = q (constante). Pour arithmétique : u_{n+1} − u_n = r (constante).'},
+      ]
+    },
+    { id:'m3', num:3, title:'Probabilités', sub:'Variables aléatoires · Loi binomiale · Loi normale', prog:55, badge:'badge-amber',
+      sections:[
+        {type:'intro', title:'Introduction', text:'Les probabilités modélisent les phénomènes aléatoires. La loi des grands nombres garantit que la fréquence converge vers la probabilité.'},
+        {type:'section', title:'1. Variable aléatoire', text:'', items:['Espérance : E(X) = Σ xᵢ·p(X=xᵢ)','Variance : V(X) = E(X²) − [E(X)]²','Écart-type : σ = √V(X)','Propriétés : E(aX+b) = aE(X)+b, V(aX+b) = a²V(X)']},
+        {type:'section', title:'2. Loi binomiale', text:'Schéma de Bernoulli répété n fois, avec probabilité p de succès.', items:['X ~ B(n,p)','P(X=k) = C(n,k)·p^k·(1-p)^(n-k)','E(X) = np','V(X) = np(1−p)','σ(X) = √(np(1-p))']},
+        {type:'formula', lines:['X ~ B(n, p)', 'P(X = k) = Cₙᵏ · pᵏ · (1−p)ⁿ⁻ᵏ', 'E(X) = np    V(X) = np(1−p)', 'Cₙᵏ = n! / (k!·(n−k)!)']},
+        {type:'section', title:'3. Loi normale N(μ, σ)', text:'', items:['Symétrique par rapport à μ','P(μ−σ < X < μ+σ) ≈ 68%','P(μ−2σ < X < μ+2σ) ≈ 95%','P(μ−3σ < X < μ+3σ) ≈ 99,7%','Standardisation : Z = (X − μ)/σ ~ N(0,1)']},
+        {type:'formula', lines:['Standardisation : Z = (X − μ) / σ', 'P(a ≤ X ≤ b) = P((a−μ)/σ ≤ Z ≤ (b−μ)/σ)', 'Intervalle de confiance 95% : [μ − 1,96σ ; μ + 1,96σ]']},
+      ]
+    },
+    { id:'m4', num:4, title:'Géométrie dans l\'espace', sub:'Vecteurs · Plans · Droites · Produit scalaire', prog:40, badge:'badge-red',
+      sections:[
+        {type:'intro', title:'Introduction', text:'La géométrie dans l\'espace est une extension de la géométrie plane à 3 dimensions. Maîtriser les représentations et équations est essentiel.'},
+        {type:'section', title:'1. Repère de l\'espace', text:'', items:['Repère (O, i⃗, j⃗, k⃗) orthonormé direct','Coordonnées d\'un point M(x, y, z)','AB⃗ = B − A = (xB−xA, yB−yA, zB−zA)','|AB| = √((xB−xA)²+(yB−yA)²+(zB−zA)²)']},
+        {type:'formula', lines:['Produit scalaire :', 'u⃗·v⃗ = x₁x₂ + y₁y₂ + z₁z₂', 'u⃗·v⃗ = |u⃗|·|v⃗|·cos θ', 'u⃗ ⊥ v⃗  ⟺  u⃗·v⃗ = 0']},
+        {type:'section', title:'2. Équation de plan', text:'Un plan est défini par un point et un vecteur normal.', items:['Plan : ax + by + cz + d = 0','Vecteur normal : n⃗(a, b, c)','Plan passant par A(x₀,y₀,z₀) de normale n⃗ : a(x−x₀)+b(y−y₀)+c(z−z₀)=0','Distance de M au plan : d = |ax₀+by₀+cz₀+d|/√(a²+b²+c²)']},
+        {type:'section', title:'3. Droites dans l\'espace', text:'', items:['Représentation paramétrique : M = A + t·u⃗','Droites parallèles : vecteurs directeurs colinéaires','Droites perpendiculaires : vecteurs directeurs orthogonaux','Droites coplanaires : peuvent être sécantes ou parallèles']},
+      ]
+    },
+    { id:'m5', num:5, title:'Équations différentielles', sub:'Ordre 1 et 2 · Applications physiques', prog:50, badge:'badge-teal',
+      sections:[
+        {type:'intro', title:'Introduction', text:'Les équations différentielles relient une fonction et ses dérivées. Elles modélisent des phénomènes physiques (circuits RC/RL, oscillateurs).'},
+        {type:'section', title:'1. Équation différentielle du 1er ordre', text:'', items:['Forme : y\' + ay = b','Solution homogène : y_h = K·e^(−at)','Solution particulière : y_p = b/a (constante)','Solution générale : y = K·e^(−at) + b/a']},
+        {type:'formula', lines:['y\' + ay = 0  →  y = K·e^(−at)', 'y\' + ay = b  →  y = K·e^(−at) + b/a', 'Condition initiale pour trouver K : y(0) = y₀']},
+        {type:'section', title:'2. Équation différentielle du 2ème ordre', text:'', items:['Forme : y\'\' + ω₀²·y = 0 (oscillateur)','Solution : y(t) = A·cos(ω₀t) + B·sin(ω₀t)','Ou : y(t) = Y_m·cos(ω₀t + φ)','Avec amortissement : y\'\' + 2λy\' + ω₀²y = 0']},
+        {type:'formula', lines:['y\'\' + ω₀² y = 0  →  y(t) = A cos(ω₀t) + B sin(ω₀t)', 'ω₀ = 1/√(LC)  (circuit LC)  ou  ω₀ = √(k/m)  (ressort)', 'Conditions initiales : y(0) et y\'(0) déterminent A et B']},
+        {type:'tip', text:'Application directe au circuit RLC et à l\'oscillateur mécanique : l\'équation de mouvement est toujours du 2ème ordre.'},
+      ]
+    },
+  ],
+  philo: [
+    { id:'ph1', num:1, title:'La liberté', sub:'Déterminisme · Libre arbitre · Responsabilité', prog:50, badge:'badge-purple',
+      sections:[
+        {type:'intro', title:'Introduction', text:'La liberté est l\'une des grandes questions de la philosophie. Est-on vraiment libre, ou nos actes sont-ils déterminés par des causes extérieures ?'},
+        {type:'section', title:'1. Le déterminisme', text:'Pour les déterministes, tout événement est causalement déterminé. Rien ne se produit sans raison suffisante.', items:['Déterminisme physique : les lois de la nature s\'appliquent à tout','Déterminisme psychologique : nos désirs sont causés','Démon de Laplace : connaissance parfaite → prédiction totale','Spinoza : "les hommes se croient libres parce qu\'ils ignorent les causes"']},
+        {type:'section', title:'2. Le libre arbitre', text:'Descartes et Kant défendent l\'existence d\'une liberté de la volonté, irréductible au déterminisme.', items:['Descartes : la volonté est infinie, elle peut toujours dire non','Kant : liberté transcendantale — je suis auteur de mes actes moraux','Sartre : "l\'existence précède l\'essence" — nous sommes condamnés à être libres','Responsabilité implique la liberté']},
+        {type:'tip', text:'Structure d\'une dissertation : thèse (l\'homme est déterminé) → antithèse (il est libre) → synthèse (liberté comme conquête, non comme donnée).'},
+      ]
+    },
+    { id:'ph2', num:2, title:'La conscience', sub:'Conscience de soi · Inconscient · Identité', prog:45, badge:'badge-teal',
+      sections:[
+        {type:'intro', title:'Introduction', text:'La conscience est ce qui nous permet de nous percevoir comme un sujet distinct du monde. Elle est au cœur de la question de l\'identité personnelle.'},
+        {type:'section', title:'1. La conscience de soi', text:'', items:['Descartes : "cogito ergo sum" — la pensée est certitude première','Locke : l\'identité personnelle = continuité de la conscience','Hegel : la conscience se réalise par la reconnaissance de l\'autre','La conscience réflexive : conscience qui se prend elle-même pour objet']},
+        {type:'section', title:'2. L\'inconscient', text:'Freud révolutionne la philosophie du sujet en postulant un inconscient psychique déterminant.', items:['Ça (pulsions) · Moi (réalité) · Surmoi (normes sociales)','Refoulement : mécanisme de défense du Moi','Rêves, lapsus, actes manqués : voies d\'accès à l\'inconscient','L\'inconscient remet en question la toute-puissance de la conscience']},
+      ]
+    },
+    { id:'ph3', num:3, title:'La vérité', sub:'Vérité scientifique · Relativisme · Certitude', prog:35, badge:'badge-amber',
+      sections:[
+        {type:'intro', title:'Introduction', text:'Qu\'est-ce que la vérité ? Comment la reconnaître et la distinguer de l\'opinion ? La philosophie et les sciences proposent des approches différentes.'},
+        {type:'section', title:'1. Les théories de la vérité', text:'', items:['Correspondance : une proposition est vraie si elle correspond à la réalité','Cohérence : une proposition est vraie si cohérente avec un système','Pragmatisme (James) : vrai = ce qui est utile, qui "fonctionne"','Vérification empirique : le critère des sciences expérimentales']},
+        {type:'section', title:'2. Vérité et science', text:'', items:['Popper : falsifiabilité — une théorie est scientifique si elle est réfutable','Kuhn : paradigmes scientifiques — révolutions scientifiques','Relativisme : toute vérité serait relative à un contexte','Distinction : opinion (doxa) vs connaissance (épistémè)']},
+      ]
+    },
+  ]
+};
+
+const QUIZ_DATA = [
+  // SVT
+  {mat:'svt', q:"Quel ion provoque la dépolarisation lors du potentiel d'action ?", opts:["K⁺","Ca²⁺","Na⁺","Cl⁻"], ans:2},
+  {mat:'svt', q:"La mitose produit :", opts:["4 cellules haploïdes","2 cellules diploïdes identiques","4 cellules diploïdes","2 cellules haploïdes"], ans:1},
+  {mat:'svt', q:"Lors de la méiose I, il y a séparation des :", opts:["Chromatides sœurs","Chromosomes homologues","Cellules filles","Centromères"], ans:1},
+  {mat:'svt', q:"Les anticorps sont sécrétés par :", opts:["Lymphocytes T cytotoxiques","Macrophages","Plasmocytes (LB activés)","Neutrophiles"], ans:2},
+  {mat:'svt', q:"Le neurotransmetteur à la jonction neuromusculaire est :", opts:["La dopamine","La sérotonine","L'acétylcholine","La noradrénaline"], ans:2},
+  {mat:'svt', q:"L'enzyme qui hydrolyse l'amidon dans la bouche est :", opts:["La pepsine","L'amylase salivaire","La lipase","La trypsine"], ans:1},
+  {mat:'svt', q:"Le site de la fécondation chez la femme est :", opts:["L'utérus","Le col de l'utérus","La trompe de Fallope","L'ovaire"], ans:2},
+  {mat:'svt', q:"En F2 d'un croisement monohybride, le ratio phénotypique est :", opts:["1:1","1:2:1","3:1","9:3:3:1"], ans:2},
+  {mat:'svt', q:"La vaccination crée :", opts:["Une immunité innée","Des cellules mémoires immunitaires","Des macrophages","Des globules rouges"], ans:1},
+  {mat:'svt', q:"Le potentiel de repos d'un neurone est :", opts:["+70 mV","0 mV","-70 mV","-55 mV"], ans:2},
+  {mat:'svt', q:"L'énergie des cellules est directement utilisée sous forme de :", opts:["Glucose","Glycogène","ATP","Lipides"], ans:2},
+  {mat:'svt', q:"Les chloroplastes sont le siège de :", opts:["La respiration cellulaire","La photosynthèse","La mitose","La digestion"], ans:1},
+  {mat:'svt', q:"Un alcool tertiaire soumis à un oxydant doux :", opts:["Donne une cétone","Donne un aldéhyde","Ne s'oxyde pas","Donne un acide"], ans:2},
+  {mat:'svt', q:"La nidation a lieu :", opts:["Au niveau de la trompe","Dans l'ovaire","Dans l'endomètre utérin","Dans le col utérin"], ans:2},
+  // PC
+  {mat:'pc', q:"La constante de temps τ d'un circuit RC est :", opts:["τ = R/C","τ = RC","τ = R+C","τ = √(RC)"], ans:1},
+  {mat:'pc', q:"La 2ème loi de Newton s'écrit :", opts:["E = mc²","ΣF = mv","ΣF = ma","P = mv"], ans:2},
+  {mat:'pc', q:"La réaction d'estérification est :", opts:["Totale et rapide","Limitée et lente","Totale et lente","Irréversible"], ans:1},
+  {mat:'pc', q:"La saponification est une hydrolyse :", opts:["Acide et réversible","Basique et totale","Acide et totale","Basique et réversible"], ans:1},
+  {mat:'pc', q:"L'énergie cinétique d'un corps de masse m à vitesse v est :", opts:["mv²","½mv","½mv²","mv"], ans:2},
+  {mat:'pc', q:"La constante de temps τ d'un circuit RL est :", opts:["τ = RL","τ = R/L","τ = L/R","τ = √(L/R)"], ans:2},
+  {mat:'pc', q:"La fréquence propre d'un circuit LC est :", opts:["ω₀ = LC","ω₀ = 1/(LC)","ω₀ = √(LC)","ω₀ = 1/√(LC)"], ans:3},
+  {mat:'pc', q:"Un catalyseur abaisse :", opts:["L'enthalpie de réaction","La température d'équilibre","L'énergie d'activation","La concentration des réactifs"], ans:2},
+  {mat:'pc', q:"Le 1er principe de la thermodynamique est :", opts:["L'entropie croît","ΔU = W + Q","La chaleur ne va pas du froid au chaud","ΔG < 0"], ans:1},
+  {mat:'pc', q:"Un alcool secondaire s'oxyde en :", opts:["Aldéhyde","Acide carboxylique","Cétone","Ester"], ans:2},
+  {mat:'pc', q:"La vitesse d'une réaction d'ordre 1 obéit à :", opts:["v = k","v = k[A]","v = k[A]²","v = k[A][B]"], ans:1},
+  {mat:'pc', q:"En régime permanent DC, une bobine est équivalente à :", opts:["Un condensateur","Un interrupteur ouvert","Un court-circuit (fil)","Une résistance"], ans:2},
+  {mat:'pc', q:"Le travail d'une force est :", opts:["W = F·v","W = F·a","W = F·d·cosθ","W = m·g"], ans:2},
+  // MATHS
+  {mat:'maths', q:"La dérivée de eˣ est :", opts:["x·eˣ⁻¹","eˣ","x·eˣ","1/eˣ"], ans:1},
+  {mat:'maths', q:"La dérivée de ln(x) est :", opts:["1/x","x·ln(x)","1/x²","ln(x)/x"], ans:0},
+  {mat:'maths', q:"Pour une suite géométrique de raison q, u_n = :", opts:["u₀ + n·q","u₀·qⁿ","u₀·n·q","u₀ + qⁿ"], ans:1},
+  {mat:'maths', q:"Pour X ~ B(n,p), l'espérance E(X) = :", opts:["np(1-p)","√(np)","np","n/p"], ans:2},
+  {mat:'maths', q:"lim(x→0) sin(x)/x = :", opts:["0","∞","1","non définie"], ans:2},
+  {mat:'maths', q:"∫eˣ dx = :", opts:["x·eˣ + C","eˣ/x + C","eˣ + C","eˣ⁺¹/(x+1) + C"], ans:2},
+  {mat:'maths', q:"La dérivée de (u·v) est :", opts:["u'·v'","u'v + uv'","(u'v - uv')/v²","u'·v - u·v'"], ans:1},
+  {mat:'maths', q:"Pour X ~ N(μ, σ), P(μ-2σ < X < μ+2σ) ≈ :", opts:["68%","95%","99,7%","50%"], ans:1},
+  {mat:'maths', q:"La variance de B(n,p) est :", opts:["np","np²","np(1-p)","n²p"], ans:2},
+  {mat:'maths', q:"Deux vecteurs u⃗ et v⃗ sont perpendiculaires si :", opts:["u⃗×v⃗ = 0","u⃗·v⃗ = 0","|u⃗| = |v⃗|","u⃗ = −v⃗"], ans:1},
+  // PHILO
+  {mat:'philo', q:"Selon Descartes, la première certitude est :", opts:["Je sens donc je suis","Cogito ergo sum","L'existence précède l'essence","La liberté est donnée"], ans:1},
+  {mat:'philo', q:"Pour Freud, le refoulement est un mécanisme de :", opts:["La conscience","Le Surmoi","Le Moi (mécanisme de défense)","Le Ça"], ans:2},
+  {mat:'philo', q:"Le critère de falsifiabilité de Popper permet de définir :", opts:["Une vérité absolue","Une théorie scientifique","Une opinion","Une certitude morale"], ans:1},
+  {mat:'philo', q:"Sartre affirme que l'existence précède l'essence. Cela signifie :", opts:["L'homme est prédéterminé","L'homme se définit par ses actes libres","L'essence est innée","La liberté est impossible"], ans:1},
+];
+
+const FICHES_DATA = {
+  svt: [
+    {tag:'Neurophysiologie', title:'Potentiel d\'action', body:'Phase de repos : −70 mV. Dépolarisation : Na⁺ entrant → +30 mV. Repolarisation : K⁺ sortant. Loi du tout ou rien.', formula:null},
+    {tag:'Neurophysiologie', title:'Synapse chimique', body:'Neurotransmetteur libéré par le neurone pré-synaptique → traverse la fente → récepteur post-synaptique. Transmission unidirectionnelle.', formula:null},
+    {tag:'Génétique', title:'Mitose vs Méiose', body:'Mitose : 2n → 2×(2n) identiques. Méiose : 2n → 4×(n) différentes. Crossing-over en prophase I.', formula:'2n = 46 → n = 23 (humain)'},
+    {tag:'Génétique', title:'Lois de Mendel — F2', body:'Monohybridisme F2 : 3 [dominant] / 1 [récessif]. Dihybridisme : 9/3/3/1. Utiliser l\'échiquier de Punnett.', formula:'P(AA) = 1/4, P(Aa) = 1/2, P(aa) = 1/4'},
+    {tag:'Immunologie', title:'Réponse humorale', body:'Lymphocytes B → plasmocytes → anticorps. Anticorps = immunoglobulines en Y. Neutralisent les antigènes.', formula:null},
+    {tag:'Immunologie', title:'Réponse cellulaire', body:'LT cytotoxiques (CD8+) détruisent les cellules infectées. LT auxiliaires (CD4+) coordonnent la réponse. Cellules mémoires.', formula:null},
+    {tag:'Digestion', title:'Enzymes digestives', body:'Amylase (bouche) : amidon→maltose. Pepsine (estomac, pH 2) : protéines→peptides. Lipase (intestin) : lipides→AG+glycérol.', formula:null},
+    {tag:'Reproduction', title:'Gamétogenèse', body:'Spermatogenèse : testicules, continue. Ovogenèse : ovaires, bloquée en prophase I jusqu\'à l\'ovulation.', formula:null},
+  ],
+  pc: [
+    {tag:'Mécanique', title:'Lois de Newton', body:'1ère : inertie si ΣF=0. 2ème : ΣF=ma. 3ème : action-réaction. Référentiel galiléen obligatoire.', formula:'ΣF⃗ = m·a⃗   P⃗ = m·g⃗'},
+    {tag:'Mécanique', title:'Énergie mécanique', body:'Ec = ½mv². Ep = mgh. Em = Ec + Ep = constante (sans frottement). Théorème de l\'énergie cinétique : ΔEc = ΣW.', formula:'Ec = ½mv²   Ep = mgh'},
+    {tag:'Mécanique', title:'Oscillateur harmonique', body:'ẍ + ω₀²x = 0. Solution : x(t) = Xm·cos(ω₀t + φ). Ressort : ω₀ = √(k/m). Pendule : ω₀ = √(g/L).', formula:'T₀ = 2π/ω₀ = 2π√(m/k)'},
+    {tag:'Électricité', title:'Circuit RC', body:'Charge : u_C = E(1−e^(−t/τ)) avec τ=RC. Décharge : u_C = U₀·e^(−t/τ). À t=τ : charge à 63%.', formula:'τ = RC (secondes)'},
+    {tag:'Électricité', title:'Circuit RL', body:'Établissement : i = (E/R)(1−e^(−t/τ)) avec τ=L/R. Rupture : i = I₀·e^(−t/τ). À t=τ : 63% de I_max.', formula:'τ = L/R (secondes)'},
+    {tag:'Électricité', title:'Oscillations LC / RLC', body:'ω₀ = 1/√(LC). Sans R : oscillations non amorties. Avec R : pseudo-oscillations. Résonance si ω=ω₀.', formula:'ω₀ = 1/√(LC)   T₀ = 2π√(LC)'},
+    {tag:'Chimie orga.', title:'Estérification', body:'Acide + alcool ⇌ ester + eau. Lente, limitée, athermique, catalyseur H⁺. Taux d\'estérification < 100%.', formula:'R-COOH + R\'-OH ⇌ R-COO-R\' + H₂O'},
+    {tag:'Chimie orga.', title:'Saponification', body:'Ester + NaOH → sel d\'acide + alcool. Totale, irréversible, exothermique. Rupture de la liaison ester.', formula:'R-COO-R\' + NaOH → R-COONa + R\'OH'},
+    {tag:'Cinétique', title:'Facteurs cinétiques', body:'T↑ → k↑. [Réactif]↑ → v↑. Catalyseur abaisse Ea. Surface de contact (solides).', formula:'k = A·e^(−Ea/RT)  (Arrhenius)'},
+    {tag:'Thermo.', title:'1er principe', body:'ΔU = W + Q. W reçu par le système, Q chaleur reçue. Gaz parfait : ΔU = nCvΔT.', formula:'ΔU = W + Q  (conservation énergie)'},
+  ],
+  maths: [
+    {tag:'Analyse', title:'Dérivées usuelles', body:'Fonctions de base et règles de composition à maîtriser absolument.', formula:'(eˣ)\'=eˣ  (ln x)\'=1/x  (xⁿ)\'=nxⁿ⁻¹  (sin x)\'=cos x'},
+    {tag:'Analyse', title:'Règles de dérivation', body:'(uv)\' = u\'v+uv\'. (u/v)\' = (u\'v−uv\')/v². (f∘g)\' = g\'·(f\'∘g). (uⁿ)\' = nu\'uⁿ⁻¹.', formula:'(uv)\' = u\'v + uv\''},
+    {tag:'Analyse', title:'Intégrales usuelles', body:'∫xⁿdx = xⁿ⁺¹/(n+1)+C. ∫eˣdx = eˣ+C. ∫(1/x)dx = ln|x|+C. Intégration par parties : ∫uv\'=[uv]−∫u\'v.', formula:'∫ₐᵇ f(x)dx = [F(x)]ₐᵇ = F(b)−F(a)'},
+    {tag:'Analyse', title:'Croissances comparées', body:'Logarithme << polynôme << exponentielle. Ces relations permettent de lever les formes indéterminées.', formula:'lim(x→+∞) ln(x)/x = 0   lim(x→+∞) xⁿ/eˣ = 0'},
+    {tag:'Suites', title:'Suite arithmétique', body:'Raison r = u_{n+1} − u_n. Terme : u_n = u₀ + nr. Somme n premiers : n(u₁+uₙ)/2.', formula:'u_n = u₀ + n·r  Sₙ = n(u₁+uₙ)/2'},
+    {tag:'Suites', title:'Suite géométrique', body:'Raison q = u_{n+1}/u_n. Terme : u_n = u₀·qⁿ. Somme : u₁(1−qⁿ)/(1−q) si q≠1.', formula:'u_n = u₀·qⁿ  Sₙ = u₁(1−qⁿ)/(1−q)'},
+    {tag:'Probabilités', title:'Loi binomiale B(n,p)', body:'n épreuves de Bernoulli, probabilité p. P(X=k)=Cₙᵏ·pᵏ·(1−p)ⁿ⁻ᵏ. E(X)=np. V(X)=np(1−p).', formula:'E(X) = np   V(X) = np(1−p)'},
+    {tag:'Probabilités', title:'Loi normale N(μ,σ)', body:'68% dans [μ±σ], 95% dans [μ±2σ], 99,7% dans [μ±3σ]. Standardisation Z=(X−μ)/σ.', formula:'Z = (X − μ)/σ ~ N(0,1)'},
+    {tag:'Géométrie', title:'Produit scalaire 3D', body:'u⃗·v⃗ = x₁x₂+y₁y₂+z₁z₂ = |u||v|cosθ. u⃗⊥v⃗ ⟺ u⃗·v⃗=0. |u⃗|=√(x²+y²+z²).', formula:'u⃗·v⃗ = x₁x₂+y₁y₂+z₁z₂'},
+    {tag:'Géométrie', title:'Équation de plan', body:'Plan ax+by+cz+d=0. Vecteur normal n⃗(a,b,c). Distance M au plan : d=|ax₀+by₀+cz₀+d|/√(a²+b²+c²).', formula:'Distance = |aM+bM+cM+d|/||n⃗||'},
+  ]
+};
+
+// ===================== STATE =====================
+let curMat = 'svt';
+let quizFilter = 'all';
+let quizQueue = [...QUIZ_DATA];
+let qIdx = 0, qScore = 0, qTotal = 0, qAnswered = false;
+const days = ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
+const mats = ['SVT','PC','Maths','Philo',''];
+const mColors = {SVT:'#EEEDFE',PC:'#E1F5EE',Maths:'#FAEEDA',Philo:'#FBEAF0','':`var(--card)`};
+const mTexts = {SVT:'#3C3489',PC:'#0F6E56',Maths:'#854F0B',Philo:'#993556','':'var(--muted)'};
+const planData = days.map((_,i)=>i<5?[['SVT','PC','Maths','SVT','PC'][i],['PC','Maths','SVT','PC','Maths'][i]]:['','']);
+
+// ===================== NAV =====================
+function goTo(page, btn) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  if(btn) btn.classList.add('active');
+  if(page==='cours') renderChapList(curMat);
+  if(page==='fiches') renderFiches();
+  if(page==='quiz') renderQuiz();
+  if(page==='planning') renderPlanning();
+  if(window.innerWidth<=700) document.getElementById('sidebar').classList.remove('open');
+}
+function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); }
+
+// ===================== COURS =====================
+function selectMat(m) {
+  curMat = m;
+  document.querySelectorAll('.mat-card').forEach(c=>c.classList.remove('active'));
+  const el = document.getElementById('mat-'+m);
+  if(el) el.classList.add('active');
+  renderChapList(m);
+  document.getElementById('cours-list-view').style.display='block';
+  document.getElementById('cours-detail-view').classList.remove('active');
+}
+function renderChapList(m) {
+  const list = COURS_DATA[m] || [];
+  document.getElementById('chap-list').innerHTML = list.map(c=>`
+    <li class="chap-item" onclick="showCours('${c.id}')">
+      <div class="chap-num">${c.num}</div>
+      <div class="chap-body">
+        <div class="chap-title">${c.title}</div>
+        <div class="chap-sub">${c.sub}</div>
+        <div class="prog-bar"><div class="prog-fill" style="width:${c.prog}%"></div></div>
+      </div>
+      <div class="chap-arrow"><i class="ti ti-chevron-right"></i></div>
+    </li>`).join('');
+}
+function showCours(id) {
+  const all = Object.values(COURS_DATA).flat();
+  const c = all.find(x=>x.id===id);
+  if(!c) return;
+  document.getElementById('cours-list-view').style.display='none';
+  const detail = document.getElementById('cours-detail-view');
+  detail.classList.add('active');
+  let html = `<div class="card"><h3 style="font-size:18px;font-weight:600;margin-bottom:4px">${c.title}</h3><p style="font-size:13px;color:var(--muted);margin-bottom:1.25rem">${c.sub}</p>`;
+  c.sections.forEach(s=>{
+    if(s.type==='intro') {
+      html+=`<div class="section-block"><h4>Introduction</h4><p>${s.text}</p></div>`;
+    } else if(s.type==='section') {
+      html+=`<div class="section-block"><h4>${s.title}</h4>${s.text?`<p style="margin-bottom:8px">${s.text}</p>`:''}${s.items?`<ul>${s.items.map(i=>`<li>${i}</li>`).join('')}</ul>`:''}</div>`;
+    } else if(s.type==='formula') {
+      html+=`<div class="formula-box">${s.lines.map((l,i)=>i===0?`<strong>${l}</strong>`:`<span style="color:#c8c4ff;font-size:13px">${l}</span>`).join('<br>')}</div>`;
+    } else if(s.type==='tip') {
+      html+=`<div class="tip-box"><strong><i class="ti ti-bulb"></i> Astuce Bac</strong>${s.text}</div>`;
+    } else if(s.type==='warning') {
+      html+=`<div class="warning-box"><strong><i class="ti ti-alert-triangle"></i> Attention</strong>${s.text}</div>`;
+    }
+  });
+  html+=`</div>`;
+  document.getElementById('cours-detail-content').innerHTML=html;
+}
+function backToList() {
+  document.getElementById('cours-list-view').style.display='block';
+  document.getElementById('cours-detail-view').classList.remove('active');
+}
+
+// ===================== FICHES =====================
+function renderFiches() {
+  const m = document.getElementById('fiche-mat').value;
+  const q = document.getElementById('fiche-search').value.toLowerCase();
+  const list = (FICHES_DATA[m]||[]).filter(f=>!q||f.title.toLowerCase().includes(q)||f.body.toLowerCase().includes(q)||f.tag.toLowerCase().includes(q));
+  document.getElementById('fiches-container').innerHTML = list.length ? list.map(f=>`
+    <div class="fiche-card">
+      <div class="fiche-header"><span class="badge badge-purple">${f.tag}</span></div>
+      <p style="font-size:15px;font-weight:500;margin-bottom:6px">${f.title}</p>
+      <p class="fiche-body-text">${f.body}</p>
+      ${f.formula?`<code class="fiche-formula">${f.formula}</code>`:''}
+    </div>`).join('') : '<p style="color:var(--muted);font-size:13px;text-align:center;padding:2rem">Aucune fiche trouvée.</p>';
+}
+
+// ===================== QUIZ =====================
+function setFilter(f, btn) {
+  quizFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  quizQueue = f==='all' ? [...QUIZ_DATA] : QUIZ_DATA.filter(q=>q.mat===f);
+  qIdx = 0; qScore = 0; qTotal = 0;
+  updateQStats();
+  renderQuiz();
+}
+function updateQStats() {
+  document.getElementById('qs-score').textContent = qScore;
+  document.getElementById('qs-total').textContent = qTotal;
+  document.getElementById('qs-pct').textContent = qTotal ? Math.round(qScore/qTotal*100)+'%' : '—';
+  document.getElementById('d-score').textContent = qTotal ? Math.round(qScore/qTotal*100)+'%' : '0%';
+  document.getElementById('d-qcm').textContent = qTotal;
+}
+function renderQuiz() {
+  if(!quizQueue.length) { document.getElementById('quiz-box').innerHTML='<p style="color:var(--muted);font-size:13px">Aucune question pour ce filtre.</p>'; return; }
+  const q = quizQueue[qIdx % quizQueue.length];
+  qAnswered = false;
+  document.getElementById('quiz-box').innerHTML=`
+    <p style="font-size:12px;color:var(--muted);margin-bottom:10px">Question ${(qIdx%quizQueue.length)+1} / ${quizQueue.length} · <span class="badge badge-purple">${q.mat.toUpperCase()}</span></p>
+    <p class="quiz-q-text">${q.q}</p>
+    ${q.opts.map((o,i)=>`<button class="quiz-opt" onclick="answerQ(${i})" id="qopt${i}">
+      <span class="opt-letter">${String.fromCharCode(65+i)}</span>${o}
+    </button>`).join('')}`;
+}
+function answerQ(i) {
+  if(qAnswered) return;
+  qAnswered = true; qTotal++;
+  const q = quizQueue[qIdx % quizQueue.length];
+  document.querySelectorAll('.quiz-opt').forEach((b,idx)=>{
+    b.classList.add('locked');
+    if(idx===q.ans) b.classList.add('correct');
+    else if(idx===i && i!==q.ans) b.classList.add('wrong');
+  });
+  if(i===q.ans) qScore++;
+  updateQStats();
+  setTimeout(()=>{ qIdx++; renderQuiz(); }, 1600);
+}
+
+// ===================== PLANNING =====================
+function renderPlanning() {
+  document.getElementById('week-grid').innerHTML = days.map((d,di)=>`
+    <div class="day-col">
+      <div class="day-name">${d}</div>
+      ${[0,1].map(si=>{
+        const v = planData[di][si]||'';
+        return `<div class="slot" style="background:${mColors[v]||'var(--card)'};color:${mTexts[v]||'var(--muted)'};border-style:${v?'solid':'dashed'}" onclick="cycleSlot(${di},${si})">${v||'+'}</div>`;
+      }).join('')}
+    </div>`).join('');
+}
+function cycleSlot(di,si) {
+  const cur = planData[di][si]||'';
+  const idx = mats.indexOf(cur);
+  planData[di][si] = mats[(idx+1)%mats.length];
+  renderPlanning();
+}
+
+// ===================== INIT =====================
+renderChapList('svt');
+renderFiches();
+renderQuiz();
+renderPlanning();
+</script>
+</body>
+</html>
